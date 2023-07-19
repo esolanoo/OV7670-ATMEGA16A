@@ -1,0 +1,1678 @@
+
+Code.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         00000b62  00000000  00000000  00000074  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         00000000  00800060  00800060  00000bd6  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .bss          00000001  00800060  00800060  00000bd6  2**0
+                  ALLOC
+  3 .comment      00000030  00000000  00000000  00000bd6  2**0
+                  CONTENTS, READONLY
+  4 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000c08  2**2
+                  CONTENTS, READONLY
+  5 .debug_aranges 00000088  00000000  00000000  00000c44  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_info   000025b3  00000000  00000000  00000ccc  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_abbrev 00000746  00000000  00000000  0000327f  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_line   00000997  00000000  00000000  000039c5  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_frame  00000128  00000000  00000000  0000435c  2**2
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_str    00000402  00000000  00000000  00004484  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_loc    00000500  00000000  00000000  00004886  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 12 .debug_ranges 00000090  00000000  00000000  00004d86  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 2a 00 	jmp	0x54	; 0x54 <__ctors_end>
+   4:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+   8:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+   c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  10:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  14:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  18:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  1c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  20:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  24:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  28:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  2c:	0c 94 1b 05 	jmp	0xa36	; 0xa36 <__vector_11>
+  30:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  34:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  38:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  3c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  40:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  44:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  48:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  4c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  50:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+
+00000054 <__ctors_end>:
+  54:	11 24       	eor	r1, r1
+  56:	1f be       	out	0x3f, r1	; 63
+  58:	cf e5       	ldi	r28, 0x5F	; 95
+  5a:	d4 e0       	ldi	r29, 0x04	; 4
+  5c:	de bf       	out	0x3e, r29	; 62
+  5e:	cd bf       	out	0x3d, r28	; 61
+
+00000060 <__do_clear_bss>:
+  60:	20 e0       	ldi	r18, 0x00	; 0
+  62:	a0 e6       	ldi	r26, 0x60	; 96
+  64:	b0 e0       	ldi	r27, 0x00	; 0
+  66:	01 c0       	rjmp	.+2      	; 0x6a <.do_clear_bss_start>
+
+00000068 <.do_clear_bss_loop>:
+  68:	1d 92       	st	X+, r1
+
+0000006a <.do_clear_bss_start>:
+  6a:	a1 36       	cpi	r26, 0x61	; 97
+  6c:	b2 07       	cpc	r27, r18
+  6e:	e1 f7       	brne	.-8      	; 0x68 <.do_clear_bss_loop>
+  70:	0e 94 79 05 	call	0xaf2	; 0xaf2 <main>
+  74:	0c 94 af 05 	jmp	0xb5e	; 0xb5e <_exit>
+
+00000078 <__bad_interrupt>:
+  78:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+0000007c <TWI_init>:
+#include <avr/io.h>
+#include <util/twi.h>
+#include "twi.h"
+
+void TWI_init(){
+	TWSR = (0<<TWPS0)|(0<<TWPS1);
+  7c:	11 b8       	out	0x01, r1	; 1
+	TWBR = 72;		// Baud rate forced to 100kHz
+  7e:	88 e4       	ldi	r24, 0x48	; 72
+  80:	80 b9       	out	0x00, r24	; 0
+  82:	08 95       	ret
+
+00000084 <TWI_start>:
+					// f = 16000000 Hz / (16 + 2*72 * 1) = 100 kHz
+}
+
+
+void TWI_start(uint8_t adrss){
+	TWCR = (1<<TWINT)|(1<<TWEN)|(1<<TWSTA) ;
+  84:	94 ea       	ldi	r25, 0xA4	; 164
+  86:	96 bf       	out	0x36, r25	; 54
+	while(!(TWCR&(1<<TWINT))){}
+  88:	06 b6       	in	r0, 0x36	; 54
+  8a:	07 fe       	sbrs	r0, 7
+  8c:	fd cf       	rjmp	.-6      	; 0x88 <TWI_start+0x4>
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+  8e:	ef e1       	ldi	r30, 0x1F	; 31
+  90:	fe e4       	ldi	r31, 0x4E	; 78
+  92:	31 97       	sbiw	r30, 0x01	; 1
+  94:	f1 f7       	brne	.-4      	; 0x92 <TWI_start+0xe>
+  96:	00 c0       	rjmp	.+0      	; 0x98 <TWI_start+0x14>
+  98:	00 00       	nop
+	_delay_ms(5);
+	TWDR = adrss;
+  9a:	83 b9       	out	0x03, r24	; 3
+	TWCR = (1<<TWEN)|(1<<TWINT);
+  9c:	84 e8       	ldi	r24, 0x84	; 132
+  9e:	86 bf       	out	0x36, r24	; 54
+	while(!(TWCR&(1<<TWINT))){}
+  a0:	06 b6       	in	r0, 0x36	; 54
+  a2:	07 fe       	sbrs	r0, 7
+  a4:	fd cf       	rjmp	.-6      	; 0xa0 <TWI_start+0x1c>
+}
+  a6:	08 95       	ret
+
+000000a8 <TWI_stop>:
+
+
+void TWI_stop(){
+	TWCR = (1<<TWINT)|(1<<TWEN)|(1<<TWSTO);
+  a8:	84 e9       	ldi	r24, 0x94	; 148
+  aa:	86 bf       	out	0x36, r24	; 54
+	while (TWCR&(1<<TWSTO)){}
+  ac:	06 b6       	in	r0, 0x36	; 54
+  ae:	04 fc       	sbrc	r0, 4
+  b0:	fd cf       	rjmp	.-6      	; 0xac <TWI_stop+0x4>
+  b2:	8f e1       	ldi	r24, 0x1F	; 31
+  b4:	9e e4       	ldi	r25, 0x4E	; 78
+  b6:	01 97       	sbiw	r24, 0x01	; 1
+  b8:	f1 f7       	brne	.-4      	; 0xb6 <TWI_stop+0xe>
+  ba:	00 c0       	rjmp	.+0      	; 0xbc <TWI_stop+0x14>
+  bc:	00 00       	nop
+  be:	08 95       	ret
+
+000000c0 <TWI_write>:
+	_delay_ms(5);
+}
+
+
+void TWI_write(uint8_t data){
+	TWDR = data;				// Move to I2C reg
+  c0:	83 b9       	out	0x03, r24	; 3
+	TWCR = (1<<TWINT)|(1<<TWEN);	// Enable I2C + Clear interrupt
+  c2:	84 e8       	ldi	r24, 0x84	; 132
+  c4:	86 bf       	out	0x36, r24	; 54
+	while (!(TWCR&(1<<TWINT))){}
+  c6:	06 b6       	in	r0, 0x36	; 54
+  c8:	07 fe       	sbrs	r0, 7
+  ca:	fd cf       	rjmp	.-6      	; 0xc6 <TWI_write+0x6>
+}
+  cc:	08 95       	ret
+
+000000ce <write_reg>:
+
+
+void write_reg(uint16_t addr, uint8_t reg, uint8_t dat){
+  ce:	cf 93       	push	r28
+  d0:	df 93       	push	r29
+  d2:	d6 2f       	mov	r29, r22
+  d4:	c4 2f       	mov	r28, r20
+	TWI_start(addr);
+  d6:	0e 94 42 00 	call	0x84	; 0x84 <TWI_start>
+	TWI_write(reg);
+  da:	8d 2f       	mov	r24, r29
+  dc:	0e 94 60 00 	call	0xc0	; 0xc0 <TWI_write>
+	TWI_write(dat);
+  e0:	8c 2f       	mov	r24, r28
+  e2:	0e 94 60 00 	call	0xc0	; 0xc0 <TWI_write>
+	TWI_stop();
+  e6:	0e 94 54 00 	call	0xa8	; 0xa8 <TWI_stop>
+  ea:	8f e3       	ldi	r24, 0x3F	; 63
+  ec:	9c e9       	ldi	r25, 0x9C	; 156
+  ee:	01 97       	sbiw	r24, 0x01	; 1
+  f0:	f1 f7       	brne	.-4      	; 0xee <write_reg+0x20>
+  f2:	00 c0       	rjmp	.+0      	; 0xf4 <write_reg+0x26>
+  f4:	00 00       	nop
+	_delay_ms(10);
+}
+  f6:	df 91       	pop	r29
+  f8:	cf 91       	pop	r28
+  fa:	08 95       	ret
+
+000000fc <TWI_read>:
+
+uint8_t TWI_read(uint8_t adrr, uint8_t reg){
+  fc:	cf 93       	push	r28
+  fe:	c6 2f       	mov	r28, r22
+	TWI_start(adrr);
+ 100:	0e 94 42 00 	call	0x84	; 0x84 <TWI_start>
+	TWDR = reg;
+ 104:	c3 b9       	out	0x03, r28	; 3
+	TWCR = (1<<TWINT)|(1<<TWEN);
+ 106:	84 e8       	ldi	r24, 0x84	; 132
+ 108:	86 bf       	out	0x36, r24	; 54
+	while(!(TWCR&(1<<TWINT))){}
+ 10a:	06 b6       	in	r0, 0x36	; 54
+ 10c:	07 fe       	sbrs	r0, 7
+ 10e:	fd cf       	rjmp	.-6      	; 0x10a <TWI_read+0xe>
+	return TWDR;
+ 110:	83 b1       	in	r24, 0x03	; 3
+ 112:	cf 91       	pop	r28
+ 114:	08 95       	ret
+
+00000116 <camera_init>:
+#include "camera.h"
+#include "twi.h"
+
+void camera_init(){
+	//PINS and internal configurations
+	DDRA = 0;			// For camera data
+ 116:	1a ba       	out	0x1a, r1	; 26
+	DDRC &= ~(1<<7);	// PCKL
+ 118:	84 b3       	in	r24, 0x14	; 20
+ 11a:	8f 77       	andi	r24, 0x7F	; 127
+ 11c:	84 bb       	out	0x14, r24	; 20
+	DDRC &= ~(1<<6);	// Vsync 
+ 11e:	84 b3       	in	r24, 0x14	; 20
+ 120:	8f 7b       	andi	r24, 0xBF	; 191
+ 122:	84 bb       	out	0x14, r24	; 20
+	DDRC &= ~(1<<5);	// Href 
+ 124:	84 b3       	in	r24, 0x14	; 20
+ 126:	8f 7d       	andi	r24, 0xDF	; 223
+ 128:	84 bb       	out	0x14, r24	; 20
+	DDRB =0xFF;			// (optional) LEDs
+ 12a:	8f ef       	ldi	r24, 0xFF	; 255
+ 12c:	87 bb       	out	0x17, r24	; 23
+	DDRD |= (1<<7);		// For PMW
+ 12e:	81 b3       	in	r24, 0x11	; 17
+ 130:	80 68       	ori	r24, 0x80	; 128
+ 132:	81 bb       	out	0x11, r24	; 17
+	TCNT2 = 0;
+ 134:	14 bc       	out	0x24, r1	; 36
+	OCR2 = 1;			// 0/1/2/128
+ 136:	81 e0       	ldi	r24, 0x01	; 1
+ 138:	83 bd       	out	0x23, r24	; 35
+	TCCR2 = 0b00011001; // Fast PWM, normal op, 1 n (in PB3)
+ 13a:	89 e1       	ldi	r24, 0x19	; 25
+ 13c:	85 bd       	out	0x25, r24	; 37
+ 13e:	8f e3       	ldi	r24, 0x3F	; 63
+ 140:	9c e9       	ldi	r25, 0x9C	; 156
+ 142:	01 97       	sbiw	r24, 0x01	; 1
+ 144:	f1 f7       	brne	.-4      	; 0x142 <camera_init+0x2c>
+ 146:	00 c0       	rjmp	.+0      	; 0x148 <camera_init+0x32>
+ 148:	00 00       	nop
+	_delay_ms(10);
+	TWI_init();			// I2C 
+ 14a:	0e 94 3e 00 	call	0x7c	; 0x7c <TWI_init>
+ 14e:	8f e3       	ldi	r24, 0x3F	; 63
+ 150:	9c e9       	ldi	r25, 0x9C	; 156
+ 152:	01 97       	sbiw	r24, 0x01	; 1
+ 154:	f1 f7       	brne	.-4      	; 0x152 <camera_init+0x3c>
+ 156:	00 c0       	rjmp	.+0      	; 0x158 <camera_init+0x42>
+ 158:	00 00       	nop
+	_delay_ms(10);
+	
+	//Basic camera registers to modify
+	write_reg(OV7670_W, REG_COM7, 0x80);		// Reset the camera registers to default
+ 15a:	40 e8       	ldi	r20, 0x80	; 128
+ 15c:	62 e1       	ldi	r22, 0x12	; 18
+ 15e:	82 e4       	ldi	r24, 0x42	; 66
+ 160:	90 e0       	ldi	r25, 0x00	; 0
+ 162:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+ 166:	9f ef       	ldi	r25, 0xFF	; 255
+ 168:	23 ec       	ldi	r18, 0xC3	; 195
+ 16a:	89 e0       	ldi	r24, 0x09	; 9
+ 16c:	91 50       	subi	r25, 0x01	; 1
+ 16e:	20 40       	sbci	r18, 0x00	; 0
+ 170:	80 40       	sbci	r24, 0x00	; 0
+ 172:	e1 f7       	brne	.-8      	; 0x16c <camera_init+0x56>
+ 174:	00 c0       	rjmp	.+0      	; 0x176 <camera_init+0x60>
+ 176:	00 00       	nop
+	_delay_ms(200);								// Reseting is slow
+	write_reg(OV7670_W, REG_TSLB, 0x04); 		// no-negative, normal UV
+ 178:	44 e0       	ldi	r20, 0x04	; 4
+ 17a:	6a e3       	ldi	r22, 0x3A	; 58
+ 17c:	82 e4       	ldi	r24, 0x42	; 66
+ 17e:	90 e0       	ldi	r25, 0x00	; 0
+ 180:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, REG_COM7, 0);
+ 184:	40 e0       	ldi	r20, 0x00	; 0
+ 186:	62 e1       	ldi	r22, 0x12	; 18
+ 188:	82 e4       	ldi	r24, 0x42	; 66
+ 18a:	90 e0       	ldi	r25, 0x00	; 0
+ 18c:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	
+	write_reg(OV7670_W, REG_HSTART, 0x13);		// output format (horizontal) + HREF
+ 190:	43 e1       	ldi	r20, 0x13	; 19
+ 192:	67 e1       	ldi	r22, 0x17	; 23
+ 194:	82 e4       	ldi	r24, 0x42	; 66
+ 196:	90 e0       	ldi	r25, 0x00	; 0
+ 198:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, REG_HSTOP, 0x01);		// output format (horizontal) + HREF
+ 19c:	41 e0       	ldi	r20, 0x01	; 1
+ 19e:	68 e1       	ldi	r22, 0x18	; 24
+ 1a0:	82 e4       	ldi	r24, 0x42	; 66
+ 1a2:	90 e0       	ldi	r25, 0x00	; 0
+ 1a4:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, REG_HREF, 0xb6);		// sets horizontal size to 160 pixels
+ 1a8:	46 eb       	ldi	r20, 0xB6	; 182
+ 1aa:	62 e3       	ldi	r22, 0x32	; 50
+ 1ac:	82 e4       	ldi	r24, 0x42	; 66
+ 1ae:	90 e0       	ldi	r25, 0x00	; 0
+ 1b0:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, REG_VSTART, 0x02);		// output format (vertical) + VREF
+ 1b4:	42 e0       	ldi	r20, 0x02	; 2
+ 1b6:	69 e1       	ldi	r22, 0x19	; 25
+ 1b8:	82 e4       	ldi	r24, 0x42	; 66
+ 1ba:	90 e0       	ldi	r25, 0x00	; 0
+ 1bc:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, REG_VSTOP, 0x7A);		// output format (vertical) + VREF
+ 1c0:	4a e7       	ldi	r20, 0x7A	; 122
+ 1c2:	6a e1       	ldi	r22, 0x1A	; 26
+ 1c4:	82 e4       	ldi	r24, 0x42	; 66
+ 1c6:	90 e0       	ldi	r25, 0x00	; 0
+ 1c8:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, REG_VREF, 0x0A);		// sets vertical size to 120 pixels
+ 1cc:	4a e0       	ldi	r20, 0x0A	; 10
+ 1ce:	63 e0       	ldi	r22, 0x03	; 3
+ 1d0:	82 e4       	ldi	r24, 0x42	; 66
+ 1d2:	90 e0       	ldi	r25, 0x00	; 0
+ 1d4:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, REG_COM3, 0);
+ 1d8:	40 e0       	ldi	r20, 0x00	; 0
+ 1da:	6c e0       	ldi	r22, 0x0C	; 12
+ 1dc:	82 e4       	ldi	r24, 0x42	; 66
+ 1de:	90 e0       	ldi	r25, 0x00	; 0
+ 1e0:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, REG_COM14, 0);
+ 1e4:	40 e0       	ldi	r20, 0x00	; 0
+ 1e6:	6e e3       	ldi	r22, 0x3E	; 62
+ 1e8:	82 e4       	ldi	r24, 0x42	; 66
+ 1ea:	90 e0       	ldi	r25, 0x00	; 0
+ 1ec:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	
+	// Scale 
+	write_reg(OV7670_W, 0x70, 0x3A);
+ 1f0:	4a e3       	ldi	r20, 0x3A	; 58
+ 1f2:	60 e7       	ldi	r22, 0x70	; 112
+ 1f4:	82 e4       	ldi	r24, 0x42	; 66
+ 1f6:	90 e0       	ldi	r25, 0x00	; 0
+ 1f8:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x71, 0x35);
+ 1fc:	45 e3       	ldi	r20, 0x35	; 53
+ 1fe:	61 e7       	ldi	r22, 0x71	; 113
+ 200:	82 e4       	ldi	r24, 0x42	; 66
+ 202:	90 e0       	ldi	r25, 0x00	; 0
+ 204:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x72, 0x11);
+ 208:	41 e1       	ldi	r20, 0x11	; 17
+ 20a:	62 e7       	ldi	r22, 0x72	; 114
+ 20c:	82 e4       	ldi	r24, 0x42	; 66
+ 20e:	90 e0       	ldi	r25, 0x00	; 0
+ 210:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x73, 0xF0);
+ 214:	40 ef       	ldi	r20, 0xF0	; 240
+ 216:	63 e7       	ldi	r22, 0x73	; 115
+ 218:	82 e4       	ldi	r24, 0x42	; 66
+ 21a:	90 e0       	ldi	r25, 0x00	; 0
+ 21c:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0xA2, 0x01);
+ 220:	41 e0       	ldi	r20, 0x01	; 1
+ 222:	62 ea       	ldi	r22, 0xA2	; 162
+ 224:	82 e4       	ldi	r24, 0x42	; 66
+ 226:	90 e0       	ldi	r25, 0x00	; 0
+ 228:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, REG_COM10, 0);
+ 22c:	40 e0       	ldi	r20, 0x00	; 0
+ 22e:	65 e1       	ldi	r22, 0x15	; 21
+ 230:	82 e4       	ldi	r24, 0x42	; 66
+ 232:	90 e0       	ldi	r25, 0x00	; 0
+ 234:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	
+	//Gamma
+	write_reg(OV7670_W, 0x7a, 0x20);
+ 238:	40 e2       	ldi	r20, 0x20	; 32
+ 23a:	6a e7       	ldi	r22, 0x7A	; 122
+ 23c:	82 e4       	ldi	r24, 0x42	; 66
+ 23e:	90 e0       	ldi	r25, 0x00	; 0
+ 240:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x7b, 0x10);
+ 244:	40 e1       	ldi	r20, 0x10	; 16
+ 246:	6b e7       	ldi	r22, 0x7B	; 123
+ 248:	82 e4       	ldi	r24, 0x42	; 66
+ 24a:	90 e0       	ldi	r25, 0x00	; 0
+ 24c:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x7c, 0x1e);
+ 250:	4e e1       	ldi	r20, 0x1E	; 30
+ 252:	6c e7       	ldi	r22, 0x7C	; 124
+ 254:	82 e4       	ldi	r24, 0x42	; 66
+ 256:	90 e0       	ldi	r25, 0x00	; 0
+ 258:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x7d, 0x35);
+ 25c:	45 e3       	ldi	r20, 0x35	; 53
+ 25e:	6d e7       	ldi	r22, 0x7D	; 125
+ 260:	82 e4       	ldi	r24, 0x42	; 66
+ 262:	90 e0       	ldi	r25, 0x00	; 0
+ 264:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x7e, 0x5a);
+ 268:	4a e5       	ldi	r20, 0x5A	; 90
+ 26a:	6e e7       	ldi	r22, 0x7E	; 126
+ 26c:	82 e4       	ldi	r24, 0x42	; 66
+ 26e:	90 e0       	ldi	r25, 0x00	; 0
+ 270:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x7f, 0x69);
+ 274:	49 e6       	ldi	r20, 0x69	; 105
+ 276:	6f e7       	ldi	r22, 0x7F	; 127
+ 278:	82 e4       	ldi	r24, 0x42	; 66
+ 27a:	90 e0       	ldi	r25, 0x00	; 0
+ 27c:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x80, 0x76);
+ 280:	46 e7       	ldi	r20, 0x76	; 118
+ 282:	60 e8       	ldi	r22, 0x80	; 128
+ 284:	82 e4       	ldi	r24, 0x42	; 66
+ 286:	90 e0       	ldi	r25, 0x00	; 0
+ 288:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x81, 0x80);
+ 28c:	40 e8       	ldi	r20, 0x80	; 128
+ 28e:	61 e8       	ldi	r22, 0x81	; 129
+ 290:	82 e4       	ldi	r24, 0x42	; 66
+ 292:	90 e0       	ldi	r25, 0x00	; 0
+ 294:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x82, 0x88);
+ 298:	48 e8       	ldi	r20, 0x88	; 136
+ 29a:	62 e8       	ldi	r22, 0x82	; 130
+ 29c:	82 e4       	ldi	r24, 0x42	; 66
+ 29e:	90 e0       	ldi	r25, 0x00	; 0
+ 2a0:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x83, 0x8f);
+ 2a4:	4f e8       	ldi	r20, 0x8F	; 143
+ 2a6:	63 e8       	ldi	r22, 0x83	; 131
+ 2a8:	82 e4       	ldi	r24, 0x42	; 66
+ 2aa:	90 e0       	ldi	r25, 0x00	; 0
+ 2ac:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x84, 0x96);
+ 2b0:	46 e9       	ldi	r20, 0x96	; 150
+ 2b2:	64 e8       	ldi	r22, 0x84	; 132
+ 2b4:	82 e4       	ldi	r24, 0x42	; 66
+ 2b6:	90 e0       	ldi	r25, 0x00	; 0
+ 2b8:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x85, 0xa3);
+ 2bc:	43 ea       	ldi	r20, 0xA3	; 163
+ 2be:	65 e8       	ldi	r22, 0x85	; 133
+ 2c0:	82 e4       	ldi	r24, 0x42	; 66
+ 2c2:	90 e0       	ldi	r25, 0x00	; 0
+ 2c4:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x86, 0xaf);
+ 2c8:	4f ea       	ldi	r20, 0xAF	; 175
+ 2ca:	66 e8       	ldi	r22, 0x86	; 134
+ 2cc:	82 e4       	ldi	r24, 0x42	; 66
+ 2ce:	90 e0       	ldi	r25, 0x00	; 0
+ 2d0:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x87, 0xc4);
+ 2d4:	44 ec       	ldi	r20, 0xC4	; 196
+ 2d6:	67 e8       	ldi	r22, 0x87	; 135
+ 2d8:	82 e4       	ldi	r24, 0x42	; 66
+ 2da:	90 e0       	ldi	r25, 0x00	; 0
+ 2dc:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x88, 0xd7);
+ 2e0:	47 ed       	ldi	r20, 0xD7	; 215
+ 2e2:	68 e8       	ldi	r22, 0x88	; 136
+ 2e4:	82 e4       	ldi	r24, 0x42	; 66
+ 2e6:	90 e0       	ldi	r25, 0x00	; 0
+ 2e8:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x89, 0xe8);
+ 2ec:	48 ee       	ldi	r20, 0xE8	; 232
+ 2ee:	69 e8       	ldi	r22, 0x89	; 137
+ 2f0:	82 e4       	ldi	r24, 0x42	; 66
+ 2f2:	90 e0       	ldi	r25, 0x00	; 0
+ 2f4:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	
+	write_reg(OV7670_W, REG_COM8, 0xC0); 		// AGC AWB AEC Unlimited step size
+ 2f8:	40 ec       	ldi	r20, 0xC0	; 192
+ 2fa:	63 e1       	ldi	r22, 0x13	; 19
+ 2fc:	82 e4       	ldi	r24, 0x42	; 66
+ 2fe:	90 e0       	ldi	r25, 0x00	; 0
+ 300:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, REG_GAIN, 0); 		
+ 304:	40 e0       	ldi	r20, 0x00	; 0
+ 306:	60 e0       	ldi	r22, 0x00	; 0
+ 308:	82 e4       	ldi	r24, 0x42	; 66
+ 30a:	90 e0       	ldi	r25, 0x00	; 0
+ 30c:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, REG_AECH, 0);
+ 310:	40 e0       	ldi	r20, 0x00	; 0
+ 312:	60 e1       	ldi	r22, 0x10	; 16
+ 314:	82 e4       	ldi	r24, 0x42	; 66
+ 316:	90 e0       	ldi	r25, 0x00	; 0
+ 318:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, REG_COM4, 0x40);
+ 31c:	40 e4       	ldi	r20, 0x40	; 64
+ 31e:	6d e0       	ldi	r22, 0x0D	; 13
+ 320:	82 e4       	ldi	r24, 0x42	; 66
+ 322:	90 e0       	ldi	r25, 0x00	; 0
+ 324:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, REG_COM9, 0x18);		// 4x gain + COM4 bit
+ 328:	48 e1       	ldi	r20, 0x18	; 24
+ 32a:	64 e1       	ldi	r22, 0x14	; 20
+ 32c:	82 e4       	ldi	r24, 0x42	; 66
+ 32e:	90 e0       	ldi	r25, 0x00	; 0
+ 330:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0xA5, 0x05);			// 50hz banding	
+ 334:	45 e0       	ldi	r20, 0x05	; 5
+ 336:	65 ea       	ldi	r22, 0xA5	; 165
+ 338:	82 e4       	ldi	r24, 0x42	; 66
+ 33a:	90 e0       	ldi	r25, 0x00	; 0
+ 33c:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0xAB, 0x07);
+ 340:	47 e0       	ldi	r20, 0x07	; 7
+ 342:	6b ea       	ldi	r22, 0xAB	; 171
+ 344:	82 e4       	ldi	r24, 0x42	; 66
+ 346:	90 e0       	ldi	r25, 0x00	; 0
+ 348:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x24, 0x95);
+ 34c:	45 e9       	ldi	r20, 0x95	; 149
+ 34e:	64 e2       	ldi	r22, 0x24	; 36
+ 350:	82 e4       	ldi	r24, 0x42	; 66
+ 352:	90 e0       	ldi	r25, 0x00	; 0
+ 354:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x25, 0x33);
+ 358:	43 e3       	ldi	r20, 0x33	; 51
+ 35a:	65 e2       	ldi	r22, 0x25	; 37
+ 35c:	82 e4       	ldi	r24, 0x42	; 66
+ 35e:	90 e0       	ldi	r25, 0x00	; 0
+ 360:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x26, 0xE3);
+ 364:	43 ee       	ldi	r20, 0xE3	; 227
+ 366:	66 e2       	ldi	r22, 0x26	; 38
+ 368:	82 e4       	ldi	r24, 0x42	; 66
+ 36a:	90 e0       	ldi	r25, 0x00	; 0
+ 36c:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x9F, 0x78);
+ 370:	48 e7       	ldi	r20, 0x78	; 120
+ 372:	6f e9       	ldi	r22, 0x9F	; 159
+ 374:	82 e4       	ldi	r24, 0x42	; 66
+ 376:	90 e0       	ldi	r25, 0x00	; 0
+ 378:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0xA0, 0x68);
+ 37c:	48 e6       	ldi	r20, 0x68	; 104
+ 37e:	60 ea       	ldi	r22, 0xA0	; 160
+ 380:	82 e4       	ldi	r24, 0x42	; 66
+ 382:	90 e0       	ldi	r25, 0x00	; 0
+ 384:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0xA1, 0x03);
+ 388:	43 e0       	ldi	r20, 0x03	; 3
+ 38a:	61 ea       	ldi	r22, 0xA1	; 161
+ 38c:	82 e4       	ldi	r24, 0x42	; 66
+ 38e:	90 e0       	ldi	r25, 0x00	; 0
+ 390:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0xA6, 0xD8);
+ 394:	48 ed       	ldi	r20, 0xD8	; 216
+ 396:	66 ea       	ldi	r22, 0xA6	; 166
+ 398:	82 e4       	ldi	r24, 0x42	; 66
+ 39a:	90 e0       	ldi	r25, 0x00	; 0
+ 39c:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0xA7, 0xD8);
+ 3a0:	48 ed       	ldi	r20, 0xD8	; 216
+ 3a2:	67 ea       	ldi	r22, 0xA7	; 167
+ 3a4:	82 e4       	ldi	r24, 0x42	; 66
+ 3a6:	90 e0       	ldi	r25, 0x00	; 0
+ 3a8:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0xA8, 0xF0);
+ 3ac:	40 ef       	ldi	r20, 0xF0	; 240
+ 3ae:	68 ea       	ldi	r22, 0xA8	; 168
+ 3b0:	82 e4       	ldi	r24, 0x42	; 66
+ 3b2:	90 e0       	ldi	r25, 0x00	; 0
+ 3b4:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0xA9, 0x90);
+ 3b8:	40 e9       	ldi	r20, 0x90	; 144
+ 3ba:	69 ea       	ldi	r22, 0xA9	; 169
+ 3bc:	82 e4       	ldi	r24, 0x42	; 66
+ 3be:	90 e0       	ldi	r25, 0x00	; 0
+ 3c0:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0xAA, 0x94);			// Histogram AEC/AGC controls
+ 3c4:	44 e9       	ldi	r20, 0x94	; 148
+ 3c6:	6a ea       	ldi	r22, 0xAA	; 170
+ 3c8:	82 e4       	ldi	r24, 0x42	; 66
+ 3ca:	90 e0       	ldi	r25, 0x00	; 0
+ 3cc:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, REG_COM8, 0xC5);
+ 3d0:	45 ec       	ldi	r20, 0xC5	; 197
+ 3d2:	63 e1       	ldi	r22, 0x13	; 19
+ 3d4:	82 e4       	ldi	r24, 0x42	; 66
+ 3d6:	90 e0       	ldi	r25, 0x00	; 0
+ 3d8:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, REG_HSYST, 0);
+ 3dc:	40 e0       	ldi	r20, 0x00	; 0
+ 3de:	60 e3       	ldi	r22, 0x30	; 48
+ 3e0:	82 e4       	ldi	r24, 0x42	; 66
+ 3e2:	90 e0       	ldi	r25, 0x00	; 0
+ 3e4:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, REG_HSYEN, 0);
+ 3e8:	40 e0       	ldi	r20, 0x00	; 0
+ 3ea:	61 e3       	ldi	r22, 0x31	; 49
+ 3ec:	82 e4       	ldi	r24, 0x42	; 66
+ 3ee:	90 e0       	ldi	r25, 0x00	; 0
+ 3f0:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	
+	//Reserved
+	write_reg(OV7670_W, REG_COM5, 0x61);
+ 3f4:	41 e6       	ldi	r20, 0x61	; 97
+ 3f6:	6e e0       	ldi	r22, 0x0E	; 14
+ 3f8:	82 e4       	ldi	r24, 0x42	; 66
+ 3fa:	90 e0       	ldi	r25, 0x00	; 0
+ 3fc:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, REG_COM6, 0x4B);
+ 400:	4b e4       	ldi	r20, 0x4B	; 75
+ 402:	6f e0       	ldi	r22, 0x0F	; 15
+ 404:	82 e4       	ldi	r24, 0x42	; 66
+ 406:	90 e0       	ldi	r25, 0x00	; 0
+ 408:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x16, 0x02);
+ 40c:	42 e0       	ldi	r20, 0x02	; 2
+ 40e:	66 e1       	ldi	r22, 0x16	; 22
+ 410:	82 e4       	ldi	r24, 0x42	; 66
+ 412:	90 e0       	ldi	r25, 0x00	; 0
+ 414:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, REG_MVFP, 0x07);
+ 418:	47 e0       	ldi	r20, 0x07	; 7
+ 41a:	6e e1       	ldi	r22, 0x1E	; 30
+ 41c:	82 e4       	ldi	r24, 0x42	; 66
+ 41e:	90 e0       	ldi	r25, 0x00	; 0
+ 420:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x21, 0x02);
+ 424:	42 e0       	ldi	r20, 0x02	; 2
+ 426:	61 e2       	ldi	r22, 0x21	; 33
+ 428:	82 e4       	ldi	r24, 0x42	; 66
+ 42a:	90 e0       	ldi	r25, 0x00	; 0
+ 42c:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x22, 0x91);
+ 430:	41 e9       	ldi	r20, 0x91	; 145
+ 432:	62 e2       	ldi	r22, 0x22	; 34
+ 434:	82 e4       	ldi	r24, 0x42	; 66
+ 436:	90 e0       	ldi	r25, 0x00	; 0
+ 438:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x29, 0x07);
+ 43c:	47 e0       	ldi	r20, 0x07	; 7
+ 43e:	69 e2       	ldi	r22, 0x29	; 41
+ 440:	82 e4       	ldi	r24, 0x42	; 66
+ 442:	90 e0       	ldi	r25, 0x00	; 0
+ 444:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x33, 0x0B);
+ 448:	4b e0       	ldi	r20, 0x0B	; 11
+ 44a:	63 e3       	ldi	r22, 0x33	; 51
+ 44c:	82 e4       	ldi	r24, 0x42	; 66
+ 44e:	90 e0       	ldi	r25, 0x00	; 0
+ 450:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x35, 0x0B);
+ 454:	4b e0       	ldi	r20, 0x0B	; 11
+ 456:	65 e3       	ldi	r22, 0x35	; 53
+ 458:	82 e4       	ldi	r24, 0x42	; 66
+ 45a:	90 e0       	ldi	r25, 0x00	; 0
+ 45c:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x37, 0x1D);
+ 460:	4d e1       	ldi	r20, 0x1D	; 29
+ 462:	67 e3       	ldi	r22, 0x37	; 55
+ 464:	82 e4       	ldi	r24, 0x42	; 66
+ 466:	90 e0       	ldi	r25, 0x00	; 0
+ 468:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x38, 0x71);
+ 46c:	41 e7       	ldi	r20, 0x71	; 113
+ 46e:	68 e3       	ldi	r22, 0x38	; 56
+ 470:	82 e4       	ldi	r24, 0x42	; 66
+ 472:	90 e0       	ldi	r25, 0x00	; 0
+ 474:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x39, 0x2A);
+ 478:	4a e2       	ldi	r20, 0x2A	; 42
+ 47a:	69 e3       	ldi	r22, 0x39	; 57
+ 47c:	82 e4       	ldi	r24, 0x42	; 66
+ 47e:	90 e0       	ldi	r25, 0x00	; 0
+ 480:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, REG_COM12, 0x78);
+ 484:	48 e7       	ldi	r20, 0x78	; 120
+ 486:	6c e3       	ldi	r22, 0x3C	; 60
+ 488:	82 e4       	ldi	r24, 0x42	; 66
+ 48a:	90 e0       	ldi	r25, 0x00	; 0
+ 48c:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x4D, 0x40);
+ 490:	40 e4       	ldi	r20, 0x40	; 64
+ 492:	6d e4       	ldi	r22, 0x4D	; 77
+ 494:	82 e4       	ldi	r24, 0x42	; 66
+ 496:	90 e0       	ldi	r25, 0x00	; 0
+ 498:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x4E, 0x20);
+ 49c:	40 e2       	ldi	r20, 0x20	; 32
+ 49e:	6e e4       	ldi	r22, 0x4E	; 78
+ 4a0:	82 e4       	ldi	r24, 0x42	; 66
+ 4a2:	90 e0       	ldi	r25, 0x00	; 0
+ 4a4:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, REG_GFIX, 0);
+ 4a8:	40 e0       	ldi	r20, 0x00	; 0
+ 4aa:	69 e6       	ldi	r22, 0x69	; 105
+ 4ac:	82 e4       	ldi	r24, 0x42	; 66
+ 4ae:	90 e0       	ldi	r25, 0x00	; 0
+ 4b0:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x74, 0x10);
+ 4b4:	40 e1       	ldi	r20, 0x10	; 16
+ 4b6:	64 e7       	ldi	r22, 0x74	; 116
+ 4b8:	82 e4       	ldi	r24, 0x42	; 66
+ 4ba:	90 e0       	ldi	r25, 0x00	; 0
+ 4bc:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x8D, 0x4F);
+ 4c0:	4f e4       	ldi	r20, 0x4F	; 79
+ 4c2:	6d e8       	ldi	r22, 0x8D	; 141
+ 4c4:	82 e4       	ldi	r24, 0x42	; 66
+ 4c6:	90 e0       	ldi	r25, 0x00	; 0
+ 4c8:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x8E, 0);
+ 4cc:	40 e0       	ldi	r20, 0x00	; 0
+ 4ce:	6e e8       	ldi	r22, 0x8E	; 142
+ 4d0:	82 e4       	ldi	r24, 0x42	; 66
+ 4d2:	90 e0       	ldi	r25, 0x00	; 0
+ 4d4:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x8F, 0);
+ 4d8:	40 e0       	ldi	r20, 0x00	; 0
+ 4da:	6f e8       	ldi	r22, 0x8F	; 143
+ 4dc:	82 e4       	ldi	r24, 0x42	; 66
+ 4de:	90 e0       	ldi	r25, 0x00	; 0
+ 4e0:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x90, 0);
+ 4e4:	40 e0       	ldi	r20, 0x00	; 0
+ 4e6:	60 e9       	ldi	r22, 0x90	; 144
+ 4e8:	82 e4       	ldi	r24, 0x42	; 66
+ 4ea:	90 e0       	ldi	r25, 0x00	; 0
+ 4ec:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x91, 0);
+ 4f0:	40 e0       	ldi	r20, 0x00	; 0
+ 4f2:	61 e9       	ldi	r22, 0x91	; 145
+ 4f4:	82 e4       	ldi	r24, 0x42	; 66
+ 4f6:	90 e0       	ldi	r25, 0x00	; 0
+ 4f8:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x96, 0);
+ 4fc:	40 e0       	ldi	r20, 0x00	; 0
+ 4fe:	66 e9       	ldi	r22, 0x96	; 150
+ 500:	82 e4       	ldi	r24, 0x42	; 66
+ 502:	90 e0       	ldi	r25, 0x00	; 0
+ 504:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x9A, 0);
+ 508:	40 e0       	ldi	r20, 0x00	; 0
+ 50a:	6a e9       	ldi	r22, 0x9A	; 154
+ 50c:	82 e4       	ldi	r24, 0x42	; 66
+ 50e:	90 e0       	ldi	r25, 0x00	; 0
+ 510:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0xB0, 0x84);
+ 514:	44 e8       	ldi	r20, 0x84	; 132
+ 516:	60 eb       	ldi	r22, 0xB0	; 176
+ 518:	82 e4       	ldi	r24, 0x42	; 66
+ 51a:	90 e0       	ldi	r25, 0x00	; 0
+ 51c:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0xB1, 0x0C);
+ 520:	4c e0       	ldi	r20, 0x0C	; 12
+ 522:	61 eb       	ldi	r22, 0xB1	; 177
+ 524:	82 e4       	ldi	r24, 0x42	; 66
+ 526:	90 e0       	ldi	r25, 0x00	; 0
+ 528:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0xB2, 0x0E);
+ 52c:	4e e0       	ldi	r20, 0x0E	; 14
+ 52e:	62 eb       	ldi	r22, 0xB2	; 178
+ 530:	82 e4       	ldi	r24, 0x42	; 66
+ 532:	90 e0       	ldi	r25, 0x00	; 0
+ 534:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0xB3, 0x82);
+ 538:	42 e8       	ldi	r20, 0x82	; 130
+ 53a:	63 eb       	ldi	r22, 0xB3	; 179
+ 53c:	82 e4       	ldi	r24, 0x42	; 66
+ 53e:	90 e0       	ldi	r25, 0x00	; 0
+ 540:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0xB8, 0x0A);
+ 544:	4a e0       	ldi	r20, 0x0A	; 10
+ 546:	68 eb       	ldi	r22, 0xB8	; 184
+ 548:	82 e4       	ldi	r24, 0x42	; 66
+ 54a:	90 e0       	ldi	r25, 0x00	; 0
+ 54c:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+
+	write_reg(OV7670_W, 0x43, 0x0a);
+ 550:	4a e0       	ldi	r20, 0x0A	; 10
+ 552:	63 e4       	ldi	r22, 0x43	; 67
+ 554:	82 e4       	ldi	r24, 0x42	; 66
+ 556:	90 e0       	ldi	r25, 0x00	; 0
+ 558:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x44, 0xf0);
+ 55c:	40 ef       	ldi	r20, 0xF0	; 240
+ 55e:	64 e4       	ldi	r22, 0x44	; 68
+ 560:	82 e4       	ldi	r24, 0x42	; 66
+ 562:	90 e0       	ldi	r25, 0x00	; 0
+ 564:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x45, 0x34);
+ 568:	44 e3       	ldi	r20, 0x34	; 52
+ 56a:	65 e4       	ldi	r22, 0x45	; 69
+ 56c:	82 e4       	ldi	r24, 0x42	; 66
+ 56e:	90 e0       	ldi	r25, 0x00	; 0
+ 570:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x46, 0x58);
+ 574:	48 e5       	ldi	r20, 0x58	; 88
+ 576:	66 e4       	ldi	r22, 0x46	; 70
+ 578:	82 e4       	ldi	r24, 0x42	; 66
+ 57a:	90 e0       	ldi	r25, 0x00	; 0
+ 57c:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x47, 0x28);
+ 580:	48 e2       	ldi	r20, 0x28	; 40
+ 582:	67 e4       	ldi	r22, 0x47	; 71
+ 584:	82 e4       	ldi	r24, 0x42	; 66
+ 586:	90 e0       	ldi	r25, 0x00	; 0
+ 588:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x48, 0x3a);
+ 58c:	4a e3       	ldi	r20, 0x3A	; 58
+ 58e:	68 e4       	ldi	r22, 0x48	; 72
+ 590:	82 e4       	ldi	r24, 0x42	; 66
+ 592:	90 e0       	ldi	r25, 0x00	; 0
+ 594:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x59, 0x88);
+ 598:	48 e8       	ldi	r20, 0x88	; 136
+ 59a:	69 e5       	ldi	r22, 0x59	; 89
+ 59c:	82 e4       	ldi	r24, 0x42	; 66
+ 59e:	90 e0       	ldi	r25, 0x00	; 0
+ 5a0:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x5a, 0x88);
+ 5a4:	48 e8       	ldi	r20, 0x88	; 136
+ 5a6:	6a e5       	ldi	r22, 0x5A	; 90
+ 5a8:	82 e4       	ldi	r24, 0x42	; 66
+ 5aa:	90 e0       	ldi	r25, 0x00	; 0
+ 5ac:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x5b, 0x44);
+ 5b0:	44 e4       	ldi	r20, 0x44	; 68
+ 5b2:	6b e5       	ldi	r22, 0x5B	; 91
+ 5b4:	82 e4       	ldi	r24, 0x42	; 66
+ 5b6:	90 e0       	ldi	r25, 0x00	; 0
+ 5b8:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x5c, 0x67);
+ 5bc:	47 e6       	ldi	r20, 0x67	; 103
+ 5be:	6c e5       	ldi	r22, 0x5C	; 92
+ 5c0:	82 e4       	ldi	r24, 0x42	; 66
+ 5c2:	90 e0       	ldi	r25, 0x00	; 0
+ 5c4:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x5d, 0x49);
+ 5c8:	49 e4       	ldi	r20, 0x49	; 73
+ 5ca:	6d e5       	ldi	r22, 0x5D	; 93
+ 5cc:	82 e4       	ldi	r24, 0x42	; 66
+ 5ce:	90 e0       	ldi	r25, 0x00	; 0
+ 5d0:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x5e, 0x0e);
+ 5d4:	4e e0       	ldi	r20, 0x0E	; 14
+ 5d6:	6e e5       	ldi	r22, 0x5E	; 94
+ 5d8:	82 e4       	ldi	r24, 0x42	; 66
+ 5da:	90 e0       	ldi	r25, 0x00	; 0
+ 5dc:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x6c, 0x0a);
+ 5e0:	4a e0       	ldi	r20, 0x0A	; 10
+ 5e2:	6c e6       	ldi	r22, 0x6C	; 108
+ 5e4:	82 e4       	ldi	r24, 0x42	; 66
+ 5e6:	90 e0       	ldi	r25, 0x00	; 0
+ 5e8:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x6d, 0x55);
+ 5ec:	45 e5       	ldi	r20, 0x55	; 85
+ 5ee:	6d e6       	ldi	r22, 0x6D	; 109
+ 5f0:	82 e4       	ldi	r24, 0x42	; 66
+ 5f2:	90 e0       	ldi	r25, 0x00	; 0
+ 5f4:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x6e, 0x11);
+ 5f8:	41 e1       	ldi	r20, 0x11	; 17
+ 5fa:	6e e6       	ldi	r22, 0x6E	; 110
+ 5fc:	82 e4       	ldi	r24, 0x42	; 66
+ 5fe:	90 e0       	ldi	r25, 0x00	; 0
+ 600:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x6f, 0x9e);
+ 604:	4e e9       	ldi	r20, 0x9E	; 158
+ 606:	6f e6       	ldi	r22, 0x6F	; 111
+ 608:	82 e4       	ldi	r24, 0x42	; 66
+ 60a:	90 e0       	ldi	r25, 0x00	; 0
+ 60c:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x6a, 0x40);
+ 610:	40 e4       	ldi	r20, 0x40	; 64
+ 612:	6a e6       	ldi	r22, 0x6A	; 106
+ 614:	82 e4       	ldi	r24, 0x42	; 66
+ 616:	90 e0       	ldi	r25, 0x00	; 0
+ 618:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, REG_BLUE, 0x40);
+ 61c:	40 e4       	ldi	r20, 0x40	; 64
+ 61e:	61 e0       	ldi	r22, 0x01	; 1
+ 620:	82 e4       	ldi	r24, 0x42	; 66
+ 622:	90 e0       	ldi	r25, 0x00	; 0
+ 624:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, REG_RED, 0x60);
+ 628:	40 e6       	ldi	r20, 0x60	; 96
+ 62a:	62 e0       	ldi	r22, 0x02	; 2
+ 62c:	82 e4       	ldi	r24, 0x42	; 66
+ 62e:	90 e0       	ldi	r25, 0x00	; 0
+ 630:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, REG_COM8, 0xC7);
+ 634:	47 ec       	ldi	r20, 0xC7	; 199
+ 636:	63 e1       	ldi	r22, 0x13	; 19
+ 638:	82 e4       	ldi	r24, 0x42	; 66
+ 63a:	90 e0       	ldi	r25, 0x00	; 0
+ 63c:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	
+	write_reg(OV7670_W, 0x4F, 0x80);
+ 640:	40 e8       	ldi	r20, 0x80	; 128
+ 642:	6f e4       	ldi	r22, 0x4F	; 79
+ 644:	82 e4       	ldi	r24, 0x42	; 66
+ 646:	90 e0       	ldi	r25, 0x00	; 0
+ 648:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x50, 0x80);
+ 64c:	40 e8       	ldi	r20, 0x80	; 128
+ 64e:	60 e5       	ldi	r22, 0x50	; 80
+ 650:	82 e4       	ldi	r24, 0x42	; 66
+ 652:	90 e0       	ldi	r25, 0x00	; 0
+ 654:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x51, 0);
+ 658:	40 e0       	ldi	r20, 0x00	; 0
+ 65a:	61 e5       	ldi	r22, 0x51	; 81
+ 65c:	82 e4       	ldi	r24, 0x42	; 66
+ 65e:	90 e0       	ldi	r25, 0x00	; 0
+ 660:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x52, 0x22);
+ 664:	42 e2       	ldi	r20, 0x22	; 34
+ 666:	62 e5       	ldi	r22, 0x52	; 82
+ 668:	82 e4       	ldi	r24, 0x42	; 66
+ 66a:	90 e0       	ldi	r25, 0x00	; 0
+ 66c:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x53, 0x5E);
+ 670:	4e e5       	ldi	r20, 0x5E	; 94
+ 672:	63 e5       	ldi	r22, 0x53	; 83
+ 674:	82 e4       	ldi	r24, 0x42	; 66
+ 676:	90 e0       	ldi	r25, 0x00	; 0
+ 678:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x54, 0x80);
+ 67c:	40 e8       	ldi	r20, 0x80	; 128
+ 67e:	64 e5       	ldi	r22, 0x54	; 84
+ 680:	82 e4       	ldi	r24, 0x42	; 66
+ 682:	90 e0       	ldi	r25, 0x00	; 0
+ 684:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x58, 0x9E);
+ 688:	4e e9       	ldi	r20, 0x9E	; 158
+ 68a:	68 e5       	ldi	r22, 0x58	; 88
+ 68c:	82 e4       	ldi	r24, 0x42	; 66
+ 68e:	90 e0       	ldi	r25, 0x00	; 0
+ 690:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+
+	write_reg(OV7670_W, REG_COM16, 0x08);
+ 694:	48 e0       	ldi	r20, 0x08	; 8
+ 696:	61 e4       	ldi	r22, 0x41	; 65
+ 698:	82 e4       	ldi	r24, 0x42	; 66
+ 69a:	90 e0       	ldi	r25, 0x00	; 0
+ 69c:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, REG_EDGE, 0);
+ 6a0:	40 e0       	ldi	r20, 0x00	; 0
+ 6a2:	6f e3       	ldi	r22, 0x3F	; 63
+ 6a4:	82 e4       	ldi	r24, 0x42	; 66
+ 6a6:	90 e0       	ldi	r25, 0x00	; 0
+ 6a8:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x75, 0x05);
+ 6ac:	45 e0       	ldi	r20, 0x05	; 5
+ 6ae:	65 e7       	ldi	r22, 0x75	; 117
+ 6b0:	82 e4       	ldi	r24, 0x42	; 66
+ 6b2:	90 e0       	ldi	r25, 0x00	; 0
+ 6b4:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x76, 0xE1);
+ 6b8:	41 ee       	ldi	r20, 0xE1	; 225
+ 6ba:	66 e7       	ldi	r22, 0x76	; 118
+ 6bc:	82 e4       	ldi	r24, 0x42	; 66
+ 6be:	90 e0       	ldi	r25, 0x00	; 0
+ 6c0:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x4C, 0);
+ 6c4:	40 e0       	ldi	r20, 0x00	; 0
+ 6c6:	6c e4       	ldi	r22, 0x4C	; 76
+ 6c8:	82 e4       	ldi	r24, 0x42	; 66
+ 6ca:	90 e0       	ldi	r25, 0x00	; 0
+ 6cc:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x77, 0x01);
+ 6d0:	41 e0       	ldi	r20, 0x01	; 1
+ 6d2:	67 e7       	ldi	r22, 0x77	; 119
+ 6d4:	82 e4       	ldi	r24, 0x42	; 66
+ 6d6:	90 e0       	ldi	r25, 0x00	; 0
+ 6d8:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, REG_COM13, 0x48);
+ 6dc:	48 e4       	ldi	r20, 0x48	; 72
+ 6de:	6d e3       	ldi	r22, 0x3D	; 61
+ 6e0:	82 e4       	ldi	r24, 0x42	; 66
+ 6e2:	90 e0       	ldi	r25, 0x00	; 0
+ 6e4:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x4B, 0x09);
+ 6e8:	49 e0       	ldi	r20, 0x09	; 9
+ 6ea:	6b e4       	ldi	r22, 0x4B	; 75
+ 6ec:	82 e4       	ldi	r24, 0x42	; 66
+ 6ee:	90 e0       	ldi	r25, 0x00	; 0
+ 6f0:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0xC9, 0x60);
+ 6f4:	40 e6       	ldi	r20, 0x60	; 96
+ 6f6:	69 ec       	ldi	r22, 0xC9	; 201
+ 6f8:	82 e4       	ldi	r24, 0x42	; 66
+ 6fa:	90 e0       	ldi	r25, 0x00	; 0
+ 6fc:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, REG_CONTRAS, 0x40);
+ 700:	40 e4       	ldi	r20, 0x40	; 64
+ 702:	66 e5       	ldi	r22, 0x56	; 86
+ 704:	82 e4       	ldi	r24, 0x42	; 66
+ 706:	90 e0       	ldi	r25, 0x00	; 0
+ 708:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x34, 0x11);
+ 70c:	41 e1       	ldi	r20, 0x11	; 17
+ 70e:	64 e3       	ldi	r22, 0x34	; 52
+ 710:	82 e4       	ldi	r24, 0x42	; 66
+ 712:	90 e0       	ldi	r25, 0x00	; 0
+ 714:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, REG_COM11, 0x12);
+ 718:	42 e1       	ldi	r20, 0x12	; 18
+ 71a:	6b e3       	ldi	r22, 0x3B	; 59
+ 71c:	82 e4       	ldi	r24, 0x42	; 66
+ 71e:	90 e0       	ldi	r25, 0x00	; 0
+ 720:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0xA4, 0x82);
+ 724:	42 e8       	ldi	r20, 0x82	; 130
+ 726:	64 ea       	ldi	r22, 0xA4	; 164
+ 728:	82 e4       	ldi	r24, 0x42	; 66
+ 72a:	90 e0       	ldi	r25, 0x00	; 0
+ 72c:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x96, 0);
+ 730:	40 e0       	ldi	r20, 0x00	; 0
+ 732:	66 e9       	ldi	r22, 0x96	; 150
+ 734:	82 e4       	ldi	r24, 0x42	; 66
+ 736:	90 e0       	ldi	r25, 0x00	; 0
+ 738:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x97, 0x30);
+ 73c:	40 e3       	ldi	r20, 0x30	; 48
+ 73e:	67 e9       	ldi	r22, 0x97	; 151
+ 740:	82 e4       	ldi	r24, 0x42	; 66
+ 742:	90 e0       	ldi	r25, 0x00	; 0
+ 744:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x98, 0x20);
+ 748:	40 e2       	ldi	r20, 0x20	; 32
+ 74a:	68 e9       	ldi	r22, 0x98	; 152
+ 74c:	82 e4       	ldi	r24, 0x42	; 66
+ 74e:	90 e0       	ldi	r25, 0x00	; 0
+ 750:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x99, 0x30);
+ 754:	40 e3       	ldi	r20, 0x30	; 48
+ 756:	69 e9       	ldi	r22, 0x99	; 153
+ 758:	82 e4       	ldi	r24, 0x42	; 66
+ 75a:	90 e0       	ldi	r25, 0x00	; 0
+ 75c:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x9A, 0x84);
+ 760:	44 e8       	ldi	r20, 0x84	; 132
+ 762:	6a e9       	ldi	r22, 0x9A	; 154
+ 764:	82 e4       	ldi	r24, 0x42	; 66
+ 766:	90 e0       	ldi	r25, 0x00	; 0
+ 768:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x9B, 0x29);
+ 76c:	49 e2       	ldi	r20, 0x29	; 41
+ 76e:	6b e9       	ldi	r22, 0x9B	; 155
+ 770:	82 e4       	ldi	r24, 0x42	; 66
+ 772:	90 e0       	ldi	r25, 0x00	; 0
+ 774:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x9C, 0x03);
+ 778:	43 e0       	ldi	r20, 0x03	; 3
+ 77a:	6c e9       	ldi	r22, 0x9C	; 156
+ 77c:	82 e4       	ldi	r24, 0x42	; 66
+ 77e:	90 e0       	ldi	r25, 0x00	; 0
+ 780:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x9D, 0x4C);
+ 784:	4c e4       	ldi	r20, 0x4C	; 76
+ 786:	6d e9       	ldi	r22, 0x9D	; 157
+ 788:	82 e4       	ldi	r24, 0x42	; 66
+ 78a:	90 e0       	ldi	r25, 0x00	; 0
+ 78c:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x9E, 0x3F);
+ 790:	4f e3       	ldi	r20, 0x3F	; 63
+ 792:	6e e9       	ldi	r22, 0x9E	; 158
+ 794:	82 e4       	ldi	r24, 0x42	; 66
+ 796:	90 e0       	ldi	r25, 0x00	; 0
+ 798:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x78, 0x04);
+ 79c:	44 e0       	ldi	r20, 0x04	; 4
+ 79e:	68 e7       	ldi	r22, 0x78	; 120
+ 7a0:	82 e4       	ldi	r24, 0x42	; 66
+ 7a2:	90 e0       	ldi	r25, 0x00	; 0
+ 7a4:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	
+	write_reg(OV7670_W, 0x79, 0x01);
+ 7a8:	41 e0       	ldi	r20, 0x01	; 1
+ 7aa:	69 e7       	ldi	r22, 0x79	; 121
+ 7ac:	82 e4       	ldi	r24, 0x42	; 66
+ 7ae:	90 e0       	ldi	r25, 0x00	; 0
+ 7b0:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0xC8, 0xF0);
+ 7b4:	40 ef       	ldi	r20, 0xF0	; 240
+ 7b6:	68 ec       	ldi	r22, 0xC8	; 200
+ 7b8:	82 e4       	ldi	r24, 0x42	; 66
+ 7ba:	90 e0       	ldi	r25, 0x00	; 0
+ 7bc:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x79, 0x0F);
+ 7c0:	4f e0       	ldi	r20, 0x0F	; 15
+ 7c2:	69 e7       	ldi	r22, 0x79	; 121
+ 7c4:	82 e4       	ldi	r24, 0x42	; 66
+ 7c6:	90 e0       	ldi	r25, 0x00	; 0
+ 7c8:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0xC8, 0);
+ 7cc:	40 e0       	ldi	r20, 0x00	; 0
+ 7ce:	68 ec       	ldi	r22, 0xC8	; 200
+ 7d0:	82 e4       	ldi	r24, 0x42	; 66
+ 7d2:	90 e0       	ldi	r25, 0x00	; 0
+ 7d4:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x79, 0x10);
+ 7d8:	40 e1       	ldi	r20, 0x10	; 16
+ 7da:	69 e7       	ldi	r22, 0x79	; 121
+ 7dc:	82 e4       	ldi	r24, 0x42	; 66
+ 7de:	90 e0       	ldi	r25, 0x00	; 0
+ 7e0:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0xC8, 0x7E);
+ 7e4:	4e e7       	ldi	r20, 0x7E	; 126
+ 7e6:	68 ec       	ldi	r22, 0xC8	; 200
+ 7e8:	82 e4       	ldi	r24, 0x42	; 66
+ 7ea:	90 e0       	ldi	r25, 0x00	; 0
+ 7ec:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x79, 0x0A);
+ 7f0:	4a e0       	ldi	r20, 0x0A	; 10
+ 7f2:	69 e7       	ldi	r22, 0x79	; 121
+ 7f4:	82 e4       	ldi	r24, 0x42	; 66
+ 7f6:	90 e0       	ldi	r25, 0x00	; 0
+ 7f8:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0xC8, 0x80);
+ 7fc:	40 e8       	ldi	r20, 0x80	; 128
+ 7fe:	68 ec       	ldi	r22, 0xC8	; 200
+ 800:	82 e4       	ldi	r24, 0x42	; 66
+ 802:	90 e0       	ldi	r25, 0x00	; 0
+ 804:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x79, 0x0B);
+ 808:	4b e0       	ldi	r20, 0x0B	; 11
+ 80a:	69 e7       	ldi	r22, 0x79	; 121
+ 80c:	82 e4       	ldi	r24, 0x42	; 66
+ 80e:	90 e0       	ldi	r25, 0x00	; 0
+ 810:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0xC8, 0x01);
+ 814:	41 e0       	ldi	r20, 0x01	; 1
+ 816:	68 ec       	ldi	r22, 0xC8	; 200
+ 818:	82 e4       	ldi	r24, 0x42	; 66
+ 81a:	90 e0       	ldi	r25, 0x00	; 0
+ 81c:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x79, 0x0C);
+ 820:	4c e0       	ldi	r20, 0x0C	; 12
+ 822:	69 e7       	ldi	r22, 0x79	; 121
+ 824:	82 e4       	ldi	r24, 0x42	; 66
+ 826:	90 e0       	ldi	r25, 0x00	; 0
+ 828:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0xC8, 0x0F);
+ 82c:	4f e0       	ldi	r20, 0x0F	; 15
+ 82e:	68 ec       	ldi	r22, 0xC8	; 200
+ 830:	82 e4       	ldi	r24, 0x42	; 66
+ 832:	90 e0       	ldi	r25, 0x00	; 0
+ 834:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x79, 0x0D);
+ 838:	4d e0       	ldi	r20, 0x0D	; 13
+ 83a:	69 e7       	ldi	r22, 0x79	; 121
+ 83c:	82 e4       	ldi	r24, 0x42	; 66
+ 83e:	90 e0       	ldi	r25, 0x00	; 0
+ 840:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0xC8, 0x20);
+ 844:	40 e2       	ldi	r20, 0x20	; 32
+ 846:	68 ec       	ldi	r22, 0xC8	; 200
+ 848:	82 e4       	ldi	r24, 0x42	; 66
+ 84a:	90 e0       	ldi	r25, 0x00	; 0
+ 84c:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x79, 0x09);
+ 850:	49 e0       	ldi	r20, 0x09	; 9
+ 852:	69 e7       	ldi	r22, 0x79	; 121
+ 854:	82 e4       	ldi	r24, 0x42	; 66
+ 856:	90 e0       	ldi	r25, 0x00	; 0
+ 858:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0xC8, 0x80);
+ 85c:	40 e8       	ldi	r20, 0x80	; 128
+ 85e:	68 ec       	ldi	r22, 0xC8	; 200
+ 860:	82 e4       	ldi	r24, 0x42	; 66
+ 862:	90 e0       	ldi	r25, 0x00	; 0
+ 864:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x79, 0x02);
+ 868:	42 e0       	ldi	r20, 0x02	; 2
+ 86a:	69 e7       	ldi	r22, 0x79	; 121
+ 86c:	82 e4       	ldi	r24, 0x42	; 66
+ 86e:	90 e0       	ldi	r25, 0x00	; 0
+ 870:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0xC8, 0xC0);
+ 874:	40 ec       	ldi	r20, 0xC0	; 192
+ 876:	68 ec       	ldi	r22, 0xC8	; 200
+ 878:	82 e4       	ldi	r24, 0x42	; 66
+ 87a:	90 e0       	ldi	r25, 0x00	; 0
+ 87c:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x79, 0x03);
+ 880:	43 e0       	ldi	r20, 0x03	; 3
+ 882:	69 e7       	ldi	r22, 0x79	; 121
+ 884:	82 e4       	ldi	r24, 0x42	; 66
+ 886:	90 e0       	ldi	r25, 0x00	; 0
+ 888:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0xC8, 0x40);
+ 88c:	40 e4       	ldi	r20, 0x40	; 64
+ 88e:	68 ec       	ldi	r22, 0xC8	; 200
+ 890:	82 e4       	ldi	r24, 0x42	; 66
+ 892:	90 e0       	ldi	r25, 0x00	; 0
+ 894:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x79, 0x05);
+ 898:	45 e0       	ldi	r20, 0x05	; 5
+ 89a:	69 e7       	ldi	r22, 0x79	; 121
+ 89c:	82 e4       	ldi	r24, 0x42	; 66
+ 89e:	90 e0       	ldi	r25, 0x00	; 0
+ 8a0:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0xC8, 0x30);
+ 8a4:	40 e3       	ldi	r20, 0x30	; 48
+ 8a6:	68 ec       	ldi	r22, 0xC8	; 200
+ 8a8:	82 e4       	ldi	r24, 0x42	; 66
+ 8aa:	90 e0       	ldi	r25, 0x00	; 0
+ 8ac:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x79, 0x26);
+ 8b0:	46 e2       	ldi	r20, 0x26	; 38
+ 8b2:	69 e7       	ldi	r22, 0x79	; 121
+ 8b4:	82 e4       	ldi	r24, 0x42	; 66
+ 8b6:	90 e0       	ldi	r25, 0x00	; 0
+ 8b8:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	
+	//QQVGA
+	write_reg(OV7670_W, REG_COM3, 0x04);
+ 8bc:	44 e0       	ldi	r20, 0x04	; 4
+ 8be:	6c e0       	ldi	r22, 0x0C	; 12
+ 8c0:	82 e4       	ldi	r24, 0x42	; 66
+ 8c2:	90 e0       	ldi	r25, 0x00	; 0
+ 8c4:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, REG_COM14, 0x1A);		// PCLK/4 + manual adjust
+ 8c8:	4a e1       	ldi	r20, 0x1A	; 26
+ 8ca:	6e e3       	ldi	r22, 0x3E	; 62
+ 8cc:	82 e4       	ldi	r24, 0x42	; 66
+ 8ce:	90 e0       	ldi	r25, 0x00	; 0
+ 8d0:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x72, 0x22);			// DWC control
+ 8d4:	42 e2       	ldi	r20, 0x22	; 34
+ 8d6:	62 e7       	ldi	r22, 0x72	; 114
+ 8d8:	82 e4       	ldi	r24, 0x42	; 66
+ 8da:	90 e0       	ldi	r25, 0x00	; 0
+ 8dc:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x73, 0xF2);			// Division/4 of DSP
+ 8e0:	42 ef       	ldi	r20, 0xF2	; 242
+ 8e2:	63 e7       	ldi	r22, 0x73	; 115
+ 8e4:	82 e4       	ldi	r24, 0x42	; 66
+ 8e6:	90 e0       	ldi	r25, 0x00	; 0
+ 8e8:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, REG_HSTART, 0x16);		// output format (horizontal) + HREF
+ 8ec:	46 e1       	ldi	r20, 0x16	; 22
+ 8ee:	67 e1       	ldi	r22, 0x17	; 23
+ 8f0:	82 e4       	ldi	r24, 0x42	; 66
+ 8f2:	90 e0       	ldi	r25, 0x00	; 0
+ 8f4:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, REG_HSTOP, 0x04);		// output format (horizontal) + HREF
+ 8f8:	44 e0       	ldi	r20, 0x04	; 4
+ 8fa:	68 e1       	ldi	r22, 0x18	; 24
+ 8fc:	82 e4       	ldi	r24, 0x42	; 66
+ 8fe:	90 e0       	ldi	r25, 0x00	; 0
+ 900:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, REG_HREF, 0xa4);		// sets horizontal size to 160 pixels
+ 904:	44 ea       	ldi	r20, 0xA4	; 164
+ 906:	62 e3       	ldi	r22, 0x32	; 50
+ 908:	82 e4       	ldi	r24, 0x42	; 66
+ 90a:	90 e0       	ldi	r25, 0x00	; 0
+ 90c:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, REG_VSTART, 0x02);		// output format (vertical) + VREF
+ 910:	42 e0       	ldi	r20, 0x02	; 2
+ 912:	69 e1       	ldi	r22, 0x19	; 25
+ 914:	82 e4       	ldi	r24, 0x42	; 66
+ 916:	90 e0       	ldi	r25, 0x00	; 0
+ 918:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, REG_VSTOP, 0x7A);		// output format (vertical) + VREF
+ 91c:	4a e7       	ldi	r20, 0x7A	; 122
+ 91e:	6a e1       	ldi	r22, 0x1A	; 26
+ 920:	82 e4       	ldi	r24, 0x42	; 66
+ 922:	90 e0       	ldi	r25, 0x00	; 0
+ 924:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, REG_VREF, 0x0A);		// sets vertical size to 120 pixels
+ 928:	4a e0       	ldi	r20, 0x0A	; 10
+ 92a:	63 e0       	ldi	r22, 0x03	; 3
+ 92c:	82 e4       	ldi	r24, 0x42	; 66
+ 92e:	90 e0       	ldi	r25, 0x00	; 0
+ 930:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	
+	//Select RGB565 + Matrix tweak
+	write_reg(OV7670_W, REG_COM7, 0x04); 		// RGB mode
+ 934:	44 e0       	ldi	r20, 0x04	; 4
+ 936:	62 e1       	ldi	r22, 0x12	; 18
+ 938:	82 e4       	ldi	r24, 0x42	; 66
+ 93a:	90 e0       	ldi	r25, 0x00	; 0
+ 93c:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, 0x8C, 0);
+ 940:	40 e0       	ldi	r20, 0x00	; 0
+ 942:	6c e8       	ldi	r22, 0x8C	; 140
+ 944:	82 e4       	ldi	r24, 0x42	; 66
+ 946:	90 e0       	ldi	r25, 0x00	; 0
+ 948:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, REG_COM1, 0);
+ 94c:	40 e0       	ldi	r20, 0x00	; 0
+ 94e:	64 e0       	ldi	r22, 0x04	; 4
+ 950:	82 e4       	ldi	r24, 0x42	; 66
+ 952:	90 e0       	ldi	r25, 0x00	; 0
+ 954:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, REG_COM15, 0xD0); 		// Full range output, RGB 565
+ 958:	40 ed       	ldi	r20, 0xD0	; 208
+ 95a:	60 e4       	ldi	r22, 0x40	; 64
+ 95c:	82 e4       	ldi	r24, 0x42	; 66
+ 95e:	90 e0       	ldi	r25, 0x00	; 0
+ 960:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, REG_COM9, 0x6A);
+ 964:	4a e6       	ldi	r20, 0x6A	; 106
+ 966:	64 e1       	ldi	r22, 0x14	; 20
+ 968:	82 e4       	ldi	r24, 0x42	; 66
+ 96a:	90 e0       	ldi	r25, 0x00	; 0
+ 96c:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, MTX1, 0xB3);
+ 970:	43 eb       	ldi	r20, 0xB3	; 179
+ 972:	6f e4       	ldi	r22, 0x4F	; 79
+ 974:	82 e4       	ldi	r24, 0x42	; 66
+ 976:	90 e0       	ldi	r25, 0x00	; 0
+ 978:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, MTX2, 0xB3);
+ 97c:	43 eb       	ldi	r20, 0xB3	; 179
+ 97e:	60 e5       	ldi	r22, 0x50	; 80
+ 980:	82 e4       	ldi	r24, 0x42	; 66
+ 982:	90 e0       	ldi	r25, 0x00	; 0
+ 984:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, MTX3, 0);
+ 988:	40 e0       	ldi	r20, 0x00	; 0
+ 98a:	61 e5       	ldi	r22, 0x51	; 81
+ 98c:	82 e4       	ldi	r24, 0x42	; 66
+ 98e:	90 e0       	ldi	r25, 0x00	; 0
+ 990:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, MTX4, 0x3D);
+ 994:	4d e3       	ldi	r20, 0x3D	; 61
+ 996:	62 e5       	ldi	r22, 0x52	; 82
+ 998:	82 e4       	ldi	r24, 0x42	; 66
+ 99a:	90 e0       	ldi	r25, 0x00	; 0
+ 99c:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, MTX5, 0xA7);
+ 9a0:	47 ea       	ldi	r20, 0xA7	; 167
+ 9a2:	63 e5       	ldi	r22, 0x53	; 83
+ 9a4:	82 e4       	ldi	r24, 0x42	; 66
+ 9a6:	90 e0       	ldi	r25, 0x00	; 0
+ 9a8:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, MTX6, 0xE4);			// modify to change color output
+ 9ac:	44 ee       	ldi	r20, 0xE4	; 228
+ 9ae:	64 e5       	ldi	r22, 0x54	; 84
+ 9b0:	82 e4       	ldi	r24, 0x42	; 66
+ 9b2:	90 e0       	ldi	r25, 0x00	; 0
+ 9b4:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, REG_COM13, 0x40);
+ 9b8:	40 e4       	ldi	r20, 0x40	; 64
+ 9ba:	6d e3       	ldi	r22, 0x3D	; 61
+ 9bc:	82 e4       	ldi	r24, 0x42	; 66
+ 9be:	90 e0       	ldi	r25, 0x00	; 0
+ 9c0:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	
+	uint8_t var;
+	var = TWI_read(OV7670_R, REG_COM10);
+ 9c4:	65 e1       	ldi	r22, 0x15	; 21
+ 9c6:	83 e4       	ldi	r24, 0x43	; 67
+ 9c8:	0e 94 7e 00 	call	0xfc	; 0xfc <TWI_read>
+	var |= 0x20;
+ 9cc:	48 2f       	mov	r20, r24
+ 9ce:	40 62       	ori	r20, 0x20	; 32
+	write_reg(OV7670_W, REG_COM10, var);		// Disable pclk in blank lines
+ 9d0:	65 e1       	ldi	r22, 0x15	; 21
+ 9d2:	82 e4       	ldi	r24, 0x42	; 66
+ 9d4:	90 e0       	ldi	r25, 0x00	; 0
+ 9d6:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	var = TWI_read(OV7670_R, REG_COM6);
+ 9da:	6f e0       	ldi	r22, 0x0F	; 15
+ 9dc:	83 e4       	ldi	r24, 0x43	; 67
+ 9de:	0e 94 7e 00 	call	0xfc	; 0xfc <TWI_read>
+	var |= 0x80;	
+ 9e2:	48 2f       	mov	r20, r24
+ 9e4:	40 68       	ori	r20, 0x80	; 128
+	write_reg(OV7670_W, REG_COM6, var);			// Disable HREF in blank lines
+ 9e6:	6f e0       	ldi	r22, 0x0F	; 15
+ 9e8:	82 e4       	ldi	r24, 0x42	; 66
+ 9ea:	90 e0       	ldi	r25, 0x00	; 0
+ 9ec:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	write_reg(OV7670_W, REG_CLKRC, 0x3F);		// internal clock to max 0x80|prescaler
+ 9f0:	4f e3       	ldi	r20, 0x3F	; 63
+ 9f2:	61 e1       	ldi	r22, 0x11	; 17
+ 9f4:	82 e4       	ldi	r24, 0x42	; 66
+ 9f6:	90 e0       	ldi	r25, 0x00	; 0
+ 9f8:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	var = TWI_read(OV7670_R, DBLV);
+ 9fc:	6b e6       	ldi	r22, 0x6B	; 107
+ 9fe:	83 e4       	ldi	r24, 0x43	; 67
+ a00:	0e 94 7e 00 	call	0xfc	; 0xfc <TWI_read>
+	var &= ~(0b11000000);
+ a04:	48 2f       	mov	r20, r24
+ a06:	4f 73       	andi	r20, 0x3F	; 63
+	write_reg(OV7670_W, DBLV, var|(0<<6));
+ a08:	6b e6       	ldi	r22, 0x6B	; 107
+ a0a:	82 e4       	ldi	r24, 0x42	; 66
+ a0c:	90 e0       	ldi	r25, 0x00	; 0
+ a0e:	0e 94 67 00 	call	0xce	; 0xce <write_reg>
+	
+	PORTB |= (1<<7);
+ a12:	88 b3       	in	r24, 0x18	; 24
+ a14:	80 68       	ori	r24, 0x80	; 128
+ a16:	88 bb       	out	0x18, r24	; 24
+ a18:	08 95       	ret
+
+00000a1a <USART_Init>:
+    }
+}
+
+
+void USART_Init(uint16_t ubrr){
+	UBRRH = (ubrr>>8);
+ a1a:	90 bd       	out	0x20, r25	; 32
+	UBRRL = ubrr;
+ a1c:	89 b9       	out	0x09, r24	; 9
+	// Use double speed
+	UCSRA |= (1<<U2X);
+ a1e:	8b b1       	in	r24, 0x0b	; 11
+ a20:	82 60       	ori	r24, 0x02	; 2
+ a22:	8b b9       	out	0x0b, r24	; 11
+	// Receiving and transmitting enabling. Receiving interruption
+	UCSRB = (1<<RXEN)|(1<<TXEN)|(1<<RXCIE);
+ a24:	88 e9       	ldi	r24, 0x98	; 152
+ a26:	8a b9       	out	0x0a, r24	; 10
+	// 1 stop bit, 8 bits data, no parity (as requested by bluetooth module)
+	UCSRC = (1<<URSEL)|(0<<USBS)|(3<<UCSZ0);
+ a28:	86 e8       	ldi	r24, 0x86	; 134
+ a2a:	80 bd       	out	0x20, r24	; 32
+ a2c:	08 95       	ret
+
+00000a2e <USART_Transmit>:
+}
+
+void USART_Transmit(uint8_t data){
+	while(!(UCSRA&(1<<UDRE))){}
+ a2e:	5d 9b       	sbis	0x0b, 5	; 11
+ a30:	fe cf       	rjmp	.-4      	; 0xa2e <USART_Transmit>
+	UDR = data;
+ a32:	8c b9       	out	0x0c, r24	; 12
+ a34:	08 95       	ret
+
+00000a36 <__vector_11>:
+}
+
+ISR(USART_RXC_vect){
+ a36:	1f 92       	push	r1
+ a38:	0f 92       	push	r0
+ a3a:	0f b6       	in	r0, 0x3f	; 63
+ a3c:	0f 92       	push	r0
+ a3e:	11 24       	eor	r1, r1
+ a40:	8f 93       	push	r24
+	serial_data = UDR;
+ a42:	8c b1       	in	r24, 0x0c	; 12
+ a44:	80 93 60 00 	sts	0x0060, r24	; 0x800060 <__DATA_REGION_ORIGIN__>
+}
+ a48:	8f 91       	pop	r24
+ a4a:	0f 90       	pop	r0
+ a4c:	0f be       	out	0x3f, r0	; 63
+ a4e:	0f 90       	pop	r0
+ a50:	1f 90       	pop	r1
+ a52:	18 95       	reti
+
+00000a54 <cero_en_bit>:
+	}
+	PORTB &= ~(1<<5);
+}
+
+uint8_t cero_en_bit(volatile uint8_t *LUGAR, uint8_t BIT){
+	return (!(*LUGAR&(1<<BIT)));
+ a54:	fc 01       	movw	r30, r24
+ a56:	80 81       	ld	r24, Z
+ a58:	90 e0       	ldi	r25, 0x00	; 0
+ a5a:	02 c0       	rjmp	.+4      	; 0xa60 <cero_en_bit+0xc>
+ a5c:	95 95       	asr	r25
+ a5e:	87 95       	ror	r24
+ a60:	6a 95       	dec	r22
+ a62:	e2 f7       	brpl	.-8      	; 0xa5c <cero_en_bit+0x8>
+ a64:	f1 e0       	ldi	r31, 0x01	; 1
+ a66:	8f 27       	eor	r24, r31
+}
+ a68:	81 70       	andi	r24, 0x01	; 1
+ a6a:	08 95       	ret
+
+00000a6c <uno_en_bit>:
+
+uint8_t uno_en_bit(volatile uint8_t *LUGAR, uint8_t BIT){
+	return (*LUGAR&(1<<BIT));
+ a6c:	fc 01       	movw	r30, r24
+ a6e:	20 81       	ld	r18, Z
+ a70:	81 e0       	ldi	r24, 0x01	; 1
+ a72:	90 e0       	ldi	r25, 0x00	; 0
+ a74:	02 c0       	rjmp	.+4      	; 0xa7a <uno_en_bit+0xe>
+ a76:	88 0f       	add	r24, r24
+ a78:	99 1f       	adc	r25, r25
+ a7a:	6a 95       	dec	r22
+ a7c:	e2 f7       	brpl	.-8      	; 0xa76 <uno_en_bit+0xa>
+}
+ a7e:	82 23       	and	r24, r18
+ a80:	08 95       	ret
+
+00000a82 <send_photo>:
+
+ISR(USART_RXC_vect){
+	serial_data = UDR;
+}
+
+void send_photo(){ //160x120
+ a82:	1f 93       	push	r17
+ a84:	cf 93       	push	r28
+ a86:	df 93       	push	r29
+	uint8_t d;
+	PORTB &= ~(1<<7);
+ a88:	88 b3       	in	r24, 0x18	; 24
+ a8a:	8f 77       	andi	r24, 0x7F	; 127
+ a8c:	88 bb       	out	0x18, r24	; 24
+	PORTB |= (1<<5);
+ a8e:	88 b3       	in	r24, 0x18	; 24
+ a90:	80 62       	ori	r24, 0x20	; 32
+ a92:	88 bb       	out	0x18, r24	; 24
+	while(cero_en_bit(&PINC, 6)){}			// Wait for high in Vsync
+ a94:	66 e0       	ldi	r22, 0x06	; 6
+ a96:	83 e3       	ldi	r24, 0x33	; 51
+ a98:	90 e0       	ldi	r25, 0x00	; 0
+ a9a:	0e 94 2a 05 	call	0xa54	; 0xa54 <cero_en_bit>
+ a9e:	81 11       	cpse	r24, r1
+ aa0:	f9 cf       	rjmp	.-14     	; 0xa94 <send_photo+0x12>
+	PORTB |= (1<<7);
+ aa2:	88 b3       	in	r24, 0x18	; 24
+ aa4:	80 68       	ori	r24, 0x80	; 128
+ aa6:	88 bb       	out	0x18, r24	; 24
+	for(uint8_t h=0; h<120; h++){
+ aa8:	10 e0       	ldi	r17, 0x00	; 0
+ aaa:	1a c0       	rjmp	.+52     	; 0xae0 <send_photo+0x5e>
+		for(uint16_t w=0; w<160*2; w++){
+			while(cero_en_bit(&PINC, 7)){}		// Wait for high in PCKL
+ aac:	67 e0       	ldi	r22, 0x07	; 7
+ aae:	83 e3       	ldi	r24, 0x33	; 51
+ ab0:	90 e0       	ldi	r25, 0x00	; 0
+ ab2:	0e 94 2a 05 	call	0xa54	; 0xa54 <cero_en_bit>
+ ab6:	81 11       	cpse	r24, r1
+ ab8:	f9 cf       	rjmp	.-14     	; 0xaac <send_photo+0x2a>
+			d = PINA;
+ aba:	89 b3       	in	r24, 0x19	; 25
+			USART_Transmit(d);
+ abc:	0e 94 17 05 	call	0xa2e	; 0xa2e <USART_Transmit>
+			while(uno_en_bit(&PINC, 7)){}		// Wait for low in PCKL
+ ac0:	67 e0       	ldi	r22, 0x07	; 7
+ ac2:	83 e3       	ldi	r24, 0x33	; 51
+ ac4:	90 e0       	ldi	r25, 0x00	; 0
+ ac6:	0e 94 36 05 	call	0xa6c	; 0xa6c <uno_en_bit>
+ aca:	81 11       	cpse	r24, r1
+ acc:	f9 cf       	rjmp	.-14     	; 0xac0 <send_photo+0x3e>
+	PORTB &= ~(1<<7);
+	PORTB |= (1<<5);
+	while(cero_en_bit(&PINC, 6)){}			// Wait for high in Vsync
+	PORTB |= (1<<7);
+	for(uint8_t h=0; h<120; h++){
+		for(uint16_t w=0; w<160*2; w++){
+ ace:	21 96       	adiw	r28, 0x01	; 1
+ ad0:	02 c0       	rjmp	.+4      	; 0xad6 <send_photo+0x54>
+ ad2:	c0 e0       	ldi	r28, 0x00	; 0
+ ad4:	d0 e0       	ldi	r29, 0x00	; 0
+ ad6:	c0 34       	cpi	r28, 0x40	; 64
+ ad8:	81 e0       	ldi	r24, 0x01	; 1
+ ada:	d8 07       	cpc	r29, r24
+ adc:	38 f3       	brcs	.-50     	; 0xaac <send_photo+0x2a>
+	uint8_t d;
+	PORTB &= ~(1<<7);
+	PORTB |= (1<<5);
+	while(cero_en_bit(&PINC, 6)){}			// Wait for high in Vsync
+	PORTB |= (1<<7);
+	for(uint8_t h=0; h<120; h++){
+ ade:	1f 5f       	subi	r17, 0xFF	; 255
+ ae0:	18 37       	cpi	r17, 0x78	; 120
+ ae2:	b8 f3       	brcs	.-18     	; 0xad2 <send_photo+0x50>
+			d = PINA;
+			USART_Transmit(d);
+			while(uno_en_bit(&PINC, 7)){}		// Wait for low in PCKL
+		}
+	}
+	PORTB &= ~(1<<5);
+ ae4:	88 b3       	in	r24, 0x18	; 24
+ ae6:	8f 7d       	andi	r24, 0xDF	; 223
+ ae8:	88 bb       	out	0x18, r24	; 24
+}
+ aea:	df 91       	pop	r29
+ aec:	cf 91       	pop	r28
+ aee:	1f 91       	pop	r17
+ af0:	08 95       	ret
+
+00000af2 <main>:
+//*************************************************************************
+
+volatile uint8_t serial_data;
+
+void main(void){
+	sei();
+ af2:	78 94       	sei
+	USART_Init(MYUBRR);
+ af4:	87 e0       	ldi	r24, 0x07	; 7
+ af6:	90 e0       	ldi	r25, 0x00	; 0
+ af8:	0e 94 0d 05 	call	0xa1a	; 0xa1a <USART_Init>
+	camera_init();
+ afc:	0e 94 8b 00 	call	0x116	; 0x116 <camera_init>
+	PORTD |= (1<<6);
+ b00:	82 b3       	in	r24, 0x12	; 18
+ b02:	80 64       	ori	r24, 0x40	; 64
+ b04:	82 bb       	out	0x12, r24	; 18
+ b06:	2f ef       	ldi	r18, 0xFF	; 255
+ b08:	83 ed       	ldi	r24, 0xD3	; 211
+ b0a:	90 e3       	ldi	r25, 0x30	; 48
+ b0c:	21 50       	subi	r18, 0x01	; 1
+ b0e:	80 40       	sbci	r24, 0x00	; 0
+ b10:	90 40       	sbci	r25, 0x00	; 0
+ b12:	e1 f7       	brne	.-8      	; 0xb0c <main+0x1a>
+ b14:	00 c0       	rjmp	.+0      	; 0xb16 <main+0x24>
+ b16:	00 00       	nop
+	_delay_ms(1000);
+    while (1){
+		if(cero_en_bit(&PIND, 6)){
+ b18:	66 e0       	ldi	r22, 0x06	; 6
+ b1a:	80 e3       	ldi	r24, 0x30	; 48
+ b1c:	90 e0       	ldi	r25, 0x00	; 0
+ b1e:	0e 94 2a 05 	call	0xa54	; 0xa54 <cero_en_bit>
+ b22:	88 23       	and	r24, r24
+ b24:	c9 f3       	breq	.-14     	; 0xb18 <main+0x26>
+ b26:	2f ef       	ldi	r18, 0xFF	; 255
+ b28:	8d ee       	ldi	r24, 0xED	; 237
+ b2a:	92 e0       	ldi	r25, 0x02	; 2
+ b2c:	21 50       	subi	r18, 0x01	; 1
+ b2e:	80 40       	sbci	r24, 0x00	; 0
+ b30:	90 40       	sbci	r25, 0x00	; 0
+ b32:	e1 f7       	brne	.-8      	; 0xb2c <main+0x3a>
+ b34:	00 c0       	rjmp	.+0      	; 0xb36 <main+0x44>
+ b36:	00 00       	nop
+			_delay_ms(60);
+			while(cero_en_bit(&PIND, 6)){}
+ b38:	66 e0       	ldi	r22, 0x06	; 6
+ b3a:	80 e3       	ldi	r24, 0x30	; 48
+ b3c:	90 e0       	ldi	r25, 0x00	; 0
+ b3e:	0e 94 2a 05 	call	0xa54	; 0xa54 <cero_en_bit>
+ b42:	81 11       	cpse	r24, r1
+ b44:	f9 cf       	rjmp	.-14     	; 0xb38 <main+0x46>
+ b46:	2f ef       	ldi	r18, 0xFF	; 255
+ b48:	8d ee       	ldi	r24, 0xED	; 237
+ b4a:	92 e0       	ldi	r25, 0x02	; 2
+ b4c:	21 50       	subi	r18, 0x01	; 1
+ b4e:	80 40       	sbci	r24, 0x00	; 0
+ b50:	90 40       	sbci	r25, 0x00	; 0
+ b52:	e1 f7       	brne	.-8      	; 0xb4c <main+0x5a>
+ b54:	00 c0       	rjmp	.+0      	; 0xb56 <main+0x64>
+ b56:	00 00       	nop
+			_delay_ms(60);
+			send_photo();
+ b58:	0e 94 41 05 	call	0xa82	; 0xa82 <send_photo>
+ b5c:	dd cf       	rjmp	.-70     	; 0xb18 <main+0x26>
+
+00000b5e <_exit>:
+ b5e:	f8 94       	cli
+
+00000b60 <__stop_program>:
+ b60:	ff cf       	rjmp	.-2      	; 0xb60 <__stop_program>
